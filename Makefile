@@ -1,15 +1,15 @@
 
-.PHONY:	run-osx
+.PHONY:	run-osx, run-linux
 
 run-osx:
 	./BuildResources/nw-osx-x64/node-webkit.app/Contents/MacOS/node-webkit ./App/
-	
+
 run-linux:
 	./BuildResources/nw-linux-x64/nw ./App
 
 build-win32: JabberApp.nw
 	echo "Windows Build"
-	
+
 	rm -rf "./Build/Win32/"
 	mkdir -p "./Build/Win32/"
 	cp -r ./BuildResources/nw-win-ia32/* "./Build/Win32/"
@@ -23,8 +23,8 @@ build-win32: JabberApp.nw
 
 JabberApp.nw:
 	cd App; zip -r ../Build/JabberApp.nw *
-	
-	
+
+
 
 build-osx:
 	echo "OS X Build"
@@ -34,4 +34,3 @@ build-osx:
 	cp -r "./App" "./Build/OS X/JabberApp.app/Contents/Resources/app.nw"
 
 build: build-win32 build-osx
-

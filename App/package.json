@@ -1,13 +1,19 @@
 {
-  "name": "JabberApp",
   "main": "index.html",
+  "name": "JabberApp",
+  "description": "A simple instant messenger written in node-webkit",
+  "version": "0.0.1-alpha",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/max-weller/JabberApp.git"
+  },
   "dependencies": {
     "node-xmpp-client": "~1.0.0-alpha15"
   },
 	"single-instance": true,
 	"window": {
     "title": "JabberApp",
-		"icon": "style/AppIcon.png",
+		"icon": "img/AppIcon.png",
     "width": 920,
     "height": 650,
     "min_width": 650,

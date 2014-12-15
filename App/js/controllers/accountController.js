@@ -1,10 +1,12 @@
+window.App = window.App || {};
+
 (function() {
   var nw = require('nw.gui');
-  
+
   var self = App.AccountController = {};
-  
+
   self.accounts = [];
-  
+
   self.loadAccountData = function() {
     App.DatabaseRef.transaction(function(tx) {
       tx.executeSql('SELECT * FROM loginaccounts', [], function(tx, results) {
@@ -21,7 +23,7 @@
       });
     });
   }
-  
+
 
   self.goOnline = function(account) {
     account.xmppConn = new Client({ jid: account.jid, password: account.password });
@@ -30,24 +32,24 @@
       self.refreshAccountList();
     })
   }
-  
+
   self.refreshAccountList = function() {
     var $al = $("#accountList");
     $al.html("");
     for(var i = 0; i < this.accounts.length; i++) {
       var d = this.accounts[i];
-      $al.append("<div><i class='fa fa-circle' style='color:" + (d.online ? "green" : "gray") + "'></i> " + d.jid 
-        + "<span class='pull-right'>" 
+      $al.append("<div><i class='fa fa-circle' style='color:" + (d.online ? "green" : "gray") + "'></i> " + d.jid
+        + "<span class='pull-right'>"
         + (d.enable ? "<i class='fa fa-toggle-on'></i>" : "<i class='fa fa-toggle-off'></i>") + "</span></div>");
     }
   }
-  
+
   self.addAccountWithPopup = function() {
     var $m = $('#modal_addAccount'); $m.foundation('reveal', 'open');
     $m.find('form')[0].reset();
     $m.find('.alert-box').hide();
   }
-  
+
   self.init = function() {
     $("#accountList_addAccount").click(function() {
       self.addAccountWithPopup();
@@ -72,5 +74,4 @@
       self.refreshAccountList();
     });
   }
-  
 })();
