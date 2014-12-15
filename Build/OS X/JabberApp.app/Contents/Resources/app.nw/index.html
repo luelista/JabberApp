@@ -1,0 +1,208 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>JabberApp</title>
+	<link rel="stylesheet" href="style/normalize.css">
+	<link rel="stylesheet" href="style/foundation.css">
+	<link rel="stylesheet" href="style/style.css">
+	<link rel="stylesheet" href="style/font-awesome/css/font-awesome.min.css">
+	<script>  window.App = window.App || {}; </script>
+  <script src="js/vendor/modernizr.js"></script>
+	<script src="js/vendor/jquery.js"></script>
+	<script src="models/chatroom.js"></script>
+	<script src="models/account.js"></script>
+	<script src="models/message.js"></script>
+	<script src="controllers/databaseController.js"></script>
+	<script src="controllers/accountController.js"></script>
+	<script src="controllers/conversationController.js"></script>
+	<script src="controllers/mainWindowController.js"></script>
+	<script src="js/foundation.min.js"></script>
+</head>
+<body>
+	<div id="bodyInnerDiv">
+		<nav class="top-bar" data-topbar role="navigation"> 
+			<section class="top-bar-section"> 
+				<!-- Right Nav Section --> 
+				<ul class="right">
+					<li class=""><a href="#"><i class="fa fa-paperclip"></i> Send</a></li>
+				</ul>
+			
+				<!-- Left Nav Section --> 
+				<ul class="left">
+					<li class=""><a title="Manage Accounts" href="#" data-dropdown="drop_accountList" aria-controls="drop2" aria-expanded="false"><i class="fa fa-plane"></i></a></li>
+					<li class=""><a href="#" data-dropdown="drop_addConversation" aria-controls="drop_addConversation" aria-expanded="false"><i class="fa fa-plus"></i></a></li>
+					<li class=""><a href="#" data-reveal-id="modal_preferences"><i class="fa fa-cog"></i></a></li>
+				
+				</ul>
+			
+				<!-- Left Nav Section --> 
+				<ul class="left2">
+					<li class=""><a href="#">Name of the conversation</a></li>
+					<li class=""><a href="#"><i class="fa fa-edit"></i></a></li>
+				
+				</ul>
+			</section>
+			<div id="drop_addConversation" data-dropdown-content class="f-dropdown content" aria-hidden="true" tabindex="-1">
+			  Join a chat room:
+				<div class="row collapse postfix-round">
+	        <div class="small-9 columns">
+	          <input type="email" placeholder="room-name@chat.example.org" class="f-jid">
+	        </div>
+	        <div class="small-3 columns">
+	          <a href="#" class="button postfix f-ok-btn">Join</a>
+	        </div>
+	      </div>
+				
+				...something else
+			</div>
+			<div id="drop_accountList" data-dropdown-content class="f-dropdown content" aria-hidden="true" tabindex="-1">
+			  <div id="accountList"></div>
+				
+				<a href="#" class="button small secondary" id="accountList_addAccount"><i class="fa fa-sign-in"></i> Add Account</a>
+			</div>
+		</nav>
+	
+		<div id="mainContainer">	
+		  <div id="conversationListView">
+		  	<div class="innerDiv" id="conversationList">
+					<a href="#" class="unread">
+						Test-Konversation <span class="label round success">27</span>
+						<small>asdfasdf asdfasdf asdfa sdfas df as</small>
+					</a>
+				
+					<a href="#" class="current">
+						Test-Konversation
+						<small>qwerqwer qw erq werwe r wr q ewrqwer</small>
+					</a>
+				
+					<a href="#">
+						Test-Konversation
+						<small>qwerqwer qw erq werwe r wr q ewrqwer</small>
+					</a>
+				
+					<a href="#">
+						Test-Konversation
+						<small>qwerqwer qw erq werwe r wr q ewrqwer</small>
+					</a>
+				
+					<a href="#">
+						Test-Konversation
+						<small>qwerqwer qw erq werwe r wr q ewrqwer</small>
+					</a>
+				
+				</div>
+		  </div>
+		  <div id="contentView">...</div>
+		</div>
+	</div>
+	
+	
+	
+	
+	<!-- Add Account Dialog -->
+	
+	<div id="modal_addAccount" class="reveal-modal" data-reveal>
+		
+		<form>
+		  <div class="row">
+		    <div class="small-12 columns">
+		      <h3>Add account</h3>
+					
+					<div data-alert class="alert-box alert">
+					  <span>An error has occured.</span>
+					  <a href="#" class="close">&times;</a>
+					</div>
+					
+		    </div>
+		  </div>
+
+		  <div class="row">
+		    <div class="small-6 columns">
+		      <label>Jabber ID
+		        <input type="email" class="f-jid" placeholder="jane-doe@example.org" required />
+		      </label>
+		    </div>
+		    <div class="small-6 columns">
+		      <label>Password
+		        <input type="password" class="f-password" required />
+		      </label>
+		    </div>
+		  </div>
+
+		  <div class="row">
+				<div class="small-12 columns f-advanced-btn">
+					<a href="#" class="" onclick="$(this).closest('.row').find('div').toggleClass('hide');">Advanced ...</a>
+				</div>
+		    <div class="small-9 columns hide">
+		      <label>Server
+		        <input type="text" class="f-server" placeholder="" />
+		      </label>
+		    </div>
+		    <div class="small-3 columns  hide">
+		      <label>Port
+		        <input type="text" class="f-port" placeholder="5222" />
+		      </label>
+		    </div>
+		  </div>
+
+		  <div class="row">
+		    <div class="small-12 columns">
+		      <a href="#" class="button success f-ok-btn"><i class="fa fa-check"></i> OK</a>
+		    </div>
+		  </div>
+			
+		</form>
+		
+		
+	  <a class="close-reveal-modal">&#215;</a>
+	</div>
+	
+	
+	
+	<!-- Preferences Dialog -->
+	
+	<div id="modal_preferences" class="reveal-modal" data-reveal>
+		
+		<form>
+		  <div class="row">
+		    <div class="small-12 columns">
+		      <h3>Preferences</h3>
+					
+					
+		    </div>
+		  </div>
+
+		  <div class="row">
+		    <div class="small-6 columns">
+		      <label>Default Nickname
+		        <input type="text" class="f-nickname"  />
+		      </label>
+		    </div>
+		    <div class="small-6 columns">
+		      <label>Password
+		        <input type="password" class="f-password" required />
+		      </label>
+		    </div>
+		  </div>
+
+
+		  <div class="row">
+		    <div class="small-12 columns">
+		      <a href="#" class="button success f-ok-btn"><i class="fa fa-check"></i> OK</a>
+		    </div>
+		  </div>
+			
+		</form>
+		
+		
+	  <a class="close-reveal-modal">&#215;</a>
+	</div>
+	
+	
+  <script>
+    $(document).foundation();
+		App.MainWindow.initApp();
+  </script>
+</body>
+</html>

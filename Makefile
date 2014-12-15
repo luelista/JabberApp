@@ -7,7 +7,6 @@ run-osx:
 run-linux:
 	./BuildResources/nw-linux-x64/nw ./App
 
-
 build-win32: JabberApp.nw
 	echo "Windows Build"
 	
