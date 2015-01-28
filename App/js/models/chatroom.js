@@ -55,26 +55,6 @@ window.App = window.App || {};
     return this.jid;
   }
 
-  function randId() {
-    return (new Date()*1000000)+Math.floor(Math.random()*1000000);
-  }
-
-  Conversation.prototype.getPresenceStanza = function(type) {
-    var roomjid = this.getJid();
-    if (!roomjid.resource) roomjid.resource=this.account.getJid().user;
-    var p = new ltx.Element('presence', { from: this.account.xmppConn.jid, to: roomjid, id: randId() });
-    if (type) p.attrs.type = type;
-    var x = p.c('x', { xmlns: XMLNS_MUC /*+ '#user'*/ });
-    //x.c('item', { affiliation: affil, role: role, jid: fromJid });
-    //if(status) {
-    //  for(var i=0; i<status.length; i++) x.c('status', { code: status[i] });
-    //}
-    //if (xmppShow) p.c('show').t(xmppShow);
-    //if (xmppStatus) p.c('status').t(xmppStatus);
-    //else if (fromJid) p.c('status').t(getUserInfo(fromJid, "statusMessage"));
-    return p;
-  }
-
   Conversation.prototype.getDisplayName = function() {
     if (this.display_name && this.display_name.length>0) return this.display_name;
     if (this.subject && this.subject.length>0) return this.subject;

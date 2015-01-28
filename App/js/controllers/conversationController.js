@@ -21,6 +21,9 @@ window.App = window.App || {};
       self.refreshList();
     });
   }
+  self.getConversationByJid = function(jid) {
+
+  }
   self.init = function() {
     self.loadConversations();
 
@@ -51,13 +54,15 @@ window.App = window.App || {};
   self.onAccountOnline = function(account) {
     console.log("conversationController was told the account "+account+" is online now")
     conversations.forEach(function(conv) {
-
-      console.log("??? conference "+conv.account.rowid+" = "+account.rowid)
       if (account != conv.account) return;
       console.log("joining conference "+conv)
-      var presence = conv.getPresenceStanza();
-      account.xmppSend("xmppSendPresence", presence);
+      account.joinRoom(conv);
     });
+  }
+
+  self.onMessage = function() {
+
+
   }
 
   var acctTemplate = _.template('<a href="#" data-rowid="<%=rowid %>" class="<%= unread>0 ? "unread" : "" %> <%= isActive ? "current" : "" %>">'+

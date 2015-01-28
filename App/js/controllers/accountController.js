@@ -14,7 +14,7 @@ window.App = window.App || {};
         console.log("loadAccData result: ",results.rows.length, results.rows)
         for (i = 0; i < len; i++) {
           var d = results.rows.item(i);
-          var account = new App.Account(d);
+          var account = new App.XmppAccount(d);
           self.accounts.push(account);
           if(account.enable) self.goOnline(account);
         }
@@ -76,7 +76,7 @@ window.App = window.App || {};
     });
     $("#modal_addAccount .f-ok-btn").click(function() {
       var $win  =$("#modal_addAccount");
-      var acc = new App.Account();
+      var acc = new App.XmppAccount();
       acc.jid = $(".f-jid", $win).val();
       acc.password = $(".f-password", $win).val();
       acc.server = $(".f-server", $win).val();
