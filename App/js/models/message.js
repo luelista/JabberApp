@@ -4,8 +4,8 @@ window.App = window.App || {};
   var Message = function() {
     this.messageId = "";
     this.body = "";
-    this.sender = "";
-    this.recipient = "";
+    this.sender = null;
+    this.recipient = null;
     this.conversation = null;
   }
 

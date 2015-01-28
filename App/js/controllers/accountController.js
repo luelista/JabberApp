@@ -9,27 +9,46 @@ window.App = window.App || {};
 
   self.loadAccountData = function() {
     App.DatabaseRef.transaction(function(tx) {
-      tx.executeSql('SELECT * FROM loginaccounts', [], function(tx, results) {
+      tx.executeSql('SELECT *,rowid FROM loginaccounts', [], function(tx, results) {
         var len = results.rows.length, i;
-        console.log(results.rows.length, results.rows)
+        console.log("loadAccData result: ",results.rows.length, results.rows)
         for (i = 0; i < len; i++) {
           var d = results.rows.item(i);
           var account = new App.Account(d);
           self.accounts.push(account);
           if(account.enable) self.goOnline(account);
         }
-        console.log(self.accounts);
+        console.log("Account list: ",self.accounts);
         self.refreshAccountList();
-      });
+      }, App.SqlError);
     });
   }
 
+  self.getDefaultAccount = function() {
+    for(var i  in self.accounts)
+      if (self.accounts[i].online)
+        return self.accounts[i];
+    return null;
+  }
+
+  self.getAccountById = function(id) {
+    for(var i  in self.accounts)
+      if (self.accounts[i].rowid == id)
+        return self.accounts[i];
+    return null;
+  }
 
   self.goOnline = function(account) {
-    account.xmppConn = new Client({ jid: account.jid, password: account.password });
+    account.makeXmppConn();
+    account.xmppConn.on("error", function(err) {
+      account.connError = err;
+      self.refreshAccountList();
+    });
     account.xmppConn.on("online", function() {
       account.online = true;
+      account.connError = null;
       self.refreshAccountList();
+      App.ConversationController.onAccountOnline(account);
     })
   }
 
@@ -38,9 +57,10 @@ window.App = window.App || {};
     $al.html("");
     for(var i = 0; i < this.accounts.length; i++) {
       var d = this.accounts[i];
-      $al.append("<div><i class='fa fa-circle' style='color:" + (d.online ? "green" : "gray") + "'></i> " + d.jid
+      $al.append("<div><i class='fa fa-circle' style='color:" + (d.connError ? "red" : d.online ? "green" : "gray") + "'></i> " + d.jid
         + "<span class='pull-right'>"
         + (d.enable ? "<i class='fa fa-toggle-on'></i>" : "<i class='fa fa-toggle-off'></i>") + "</span></div>");
+      if (d.connError) $al.append("<div style='color:red'>"+d.connError+"</div>")
     }
   }
 

@@ -28,7 +28,7 @@ window.App = window.App || {};
 
       windowMenu.insert(new nw.MenuItem({ type: "separator" }), wIndex++);
     } else {
-      mod = "ctrl";
+      mod = "alt";
 
       nativeMenuBar.append(makeDropdownMenu("Account"));
       nativeMenuBar.append(makeDropdownMenu("Edit"));
@@ -55,10 +55,16 @@ window.App = window.App || {};
         App.AccountController.addAccountWithPopup();
       }
     }));
+    accountMenu.append(new nw.MenuItem({
+      label: "Quit", modifiers: mod+"", key: "q",
+      click: function() {
+        win.close();
+      }
+    }));
 
 
     windowMenu.insert(new nw.MenuItem({
-      label: "Inspector", modifiers: mod, key: "i",
+      label: "Inspector", modifiers: mod, key: "k",
       click: function() {
         nw.Window.get().showDevTools();
       }
@@ -69,14 +75,35 @@ window.App = window.App || {};
 
   }
 
+  function initHotkeys() {
+    $(document).on("keyup", function(e) {
+      var modKey = (process.platform === "darwin" ? e.metaKey : e.ctrlKey);
+
+      console.log("keyCode: "+e.keyCode);
+      if (modKey && e.keyCode == 73) { // ctrl-I
+        nw.Window.get().showDevTools();
+      }
+      if (modKey && e.keyCode == 81) { // ctrl-Q
+        nw.Window.get().close();
+      }
+      if (modKey && e.keyCode == 188) { // ctrl-,
+        App.MainWindow.showPreferences();
+      }
+    });
+  }
+
   App.MainWindow.showPreferences = function() {
     $("#modal_preferences").foundation("reveal", "open");
   };
 
   App.MainWindow.initApp = function() {
     initMainMenu();
+    initHotkeys();
+
     App.AccountController.init();
     App.AccountController.loadAccountData();
+
+    App.ConversationController.init();
 
     nw.Window.get().setBadgeLabel(7);
   }
