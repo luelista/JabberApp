@@ -22,7 +22,13 @@ window.App = window.App || {};
     });
   }
   self.getConversationByJid = function(jid) {
+    if (typeof jid=="string") jid=new JID(jid);
+    var bare=""+jid.bare();
 
+    for(var i in conversations) {
+      if (""+conversations[i].jid.bare() == bare) return conversations[i];
+    }
+    return null;
   }
   self.init = function() {
     self.loadConversations();
@@ -47,6 +53,7 @@ window.App = window.App || {};
       console.log("ID:"+this.getAttribute("data-rowid"))
       var conv = conversations[this.getAttribute("data-rowid")];
       activeConversation = conv;
+      self.displayMessages(conv);
       self.refreshList();
     });
   }
@@ -60,8 +67,27 @@ window.App = window.App || {};
     });
   }
 
-  self.onMessage = function() {
+  self.onMessage = function(msg) {
+    var conv = self.getConversationByJid(msg.sender.bare());
+    console.log("message in "+conv)
+    conv.storeMessage(msg);
 
+    if (conv == activeConversation) self.displayMessage(conv, msg);
+
+  }
+
+  self.displayMessages = function(conv) {
+    $("#contentView").html("");
+    conv.getMessages(0, 20, function(tx, msgs) {
+      var len = msgs.rows.length, i;
+      for (i = 0; i < len; i++) {
+        var d = new App.Message(msgs.rows.item(i));
+        self.displayMessage(conv, d);
+      }
+    });
+  }
+  self.displayMessage = function(conv, msg) {
+    $("#contentView").append("<div>"+msg.sender+": "+msg.body+"</div>");
 
   }
 

@@ -1,6 +1,8 @@
 
 .PHONY:	run-osx, run-linux
 
+run: run-linux
+
 run-osx:
 	./BuildResources/nw-osx-x64/node-webkit.app/Contents/MacOS/node-webkit ./App/
 

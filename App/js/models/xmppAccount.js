@@ -47,14 +47,26 @@ window.App = window.App || {};
   XmppAccount.prototype.getJid = function() {
     return new xmpp.JID(this.jid);
   }
-  function onStanza (stanza) {
-    console.log("onStanza");
+  XmppAccount.prototype.onStanza =function(stanza) {
     console.log("Incoming Stanza from:"+stanza.attrs.from, stanza);
+
+    if (stanza.is("message")) {
+      var msg = new App.Message();
+      msg.sender = new xmpp.JID(stanza.from);
+      msg.messageId = stanza.attrs.id;
+      msg.body = stanza.getChildText("body");
+      if (stanza.attrs.type && stanza.attrs.type == "groupchat") {
+        msg.recipient = msg.sender.bare();
+        msg.type = "groupchat";
+      }
+      msg.conversationJid = msg.sender.bare();
+      App.ConversationController.onMessage(msg);
+    }
   }
 
   XmppAccount.prototype.makeXmppConn = function() {
     this.xmppConn = new Client({ jid: this.jid, password: this.password });
-    this.xmppConn.on("stanza", onStanza);
+    this.xmppConn.on("stanza", this.onStanza.bind(this));
     console.log("Creating connection to: "+this.jid)
   }
 
@@ -77,7 +89,7 @@ window.App = window.App || {};
   }
 
   XmppAccount.prototype.toString = function() {
-    return this.jid;
+    return "[XmppAccount jid="+this.jid+"]";
   }
 
   App.XmppAccount = XmppAccount;

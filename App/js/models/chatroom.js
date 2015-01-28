@@ -51,6 +51,27 @@ window.App = window.App || {};
     });
   }
 
+  Conversation.prototype.getMessages = function(skip, count, callback) {
+    var self=this;
+    App.DatabaseRef.transaction(function(tx) {
+      console.log("getMessages: in transaction");
+      tx.executeSql('SELECT *,rowid FROM message WHERE conv=? ORDER BY rowid DESC LIMIT ?,?', [self.rowid,skip,count], function(tx, results) {
+        console.log("getMessages: result "+results.rows.length)
+        callback(tx, results);
+      }, App.SqlError);
+    });
+  }
+  Conversation.prototype.storeMessage = function(msg) {
+    var self=this;
+    console.log("Storing message ("+msg.body+")")
+    App.DatabaseRef.transaction(function(tx) {
+      tx.executeSql('INSERT INTO message (conv, jid,messagebody,sender) values (?,?,?,?)', [self.rowid,msg.sender,msg.body,msg.sender.resource], function(tx, results) {
+        console.log("storeMessage: ok")
+      }, App.SqlError);
+    });
+  }
+
+
   Conversation.prototype.getJid = function() {
     return this.jid;
   }
@@ -74,6 +95,10 @@ window.App = window.App || {};
         }.bind(this), App.SqlError);
       }
     }.bind(this));
+  }
+
+  Conversation.prototype.toString = function() {
+    return "[Conversation jid="+this.jid+"]";
   }
 
   App.Conversation = Conversation;
